@@ -15,14 +15,14 @@ class SecondSegment extends StatelessWidget {
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(bottom: 60),
+            padding: EdgeInsets.only(bottom: isWide ? 60 : 40),
             child: Text(
               'Drop by for a joint celebration as we welcome\nBaby Kaia’s arrival and Alyse + Jordan’s engagement.'
                   .toUpperCase(),
               textAlign: TextAlign.center,
               style: GoogleFonts.montserrat(
                 fontWeight: FontWeight.w900,
-                fontSize: isWide ? 24 : 18,
+                fontSize: isWide ? 24 : 16,
 
                 color: Color.fromRGBO(27, 60, 30, 1),
                 height: 1.6,
@@ -36,6 +36,8 @@ class SecondSegment extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _eventBlock(
+                    iswide: isWide,
+
                     emoji: '👶',
                     title: "Baby Kaia's Debut",
                     time: "3:00 PM – 5:00 PM",
@@ -43,6 +45,8 @@ class SecondSegment extends StatelessWidget {
                         "Pastries, coffee, and sweet tunes as we\nintroduce our newest addition.",
                   ),
                   _eventBlock(
+                    iswide: isWide,
+
                     emoji: '💍',
                     title: "Alyse + Jordan’s Engagement Party",
                     time: "5:00 PM – 8:00 PM (or late)",
@@ -54,6 +58,7 @@ class SecondSegment extends StatelessWidget {
               : Column(
                 children: [
                   _eventBlock(
+                    iswide: isWide,
                     emoji: '👶',
                     title: "Baby Kaia's Debut",
                     time: "3:00 PM – 5:00 PM",
@@ -62,6 +67,8 @@ class SecondSegment extends StatelessWidget {
                   ),
                   const SizedBox(height: 40),
                   _eventBlock(
+                    iswide: isWide,
+
                     emoji: '💍',
                     title: "Alyse + Jordan’s Engagement Party",
                     time: "5:00 PM – 8:00 PM (or late)",
@@ -109,7 +116,12 @@ class SecondSegment extends StatelessWidget {
                 },
                 child: _navLink("WHAT TO WEAR"),
               ),
-              _navLink("GIFTS + SUPPORT"),
+              GestureDetector(
+                onTap: () {
+                  showBigRsvpDialog(context, buildGifts());
+                },
+                child: _navLink("GIFTS + SUPPORT"),
+              ),
             ],
           ),
         ],
@@ -122,23 +134,28 @@ class SecondSegment extends StatelessWidget {
     required String title,
     required String time,
     required String desc,
+    required bool iswide,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text(
           '$emoji ${title.toUpperCase()}',
+          textAlign: TextAlign.center,
+
           style: GoogleFonts.montserrat(
-            fontSize: 14,
+            fontSize: iswide ? 14 : 12,
             fontWeight: FontWeight.bold,
             color: const Color.fromRGBO(27, 60, 30, 1),
           ),
         ),
-        const SizedBox(height: 24),
+        SizedBox(height: iswide ? 24 : 18),
         Text(
           time,
+          textAlign: TextAlign.center,
+
           style: GoogleFonts.montserrat(
-            fontSize: 13,
+            fontSize: iswide ? 13 : 12,
             fontWeight: FontWeight.w400,
             color: Colors.black87,
           ),
@@ -148,7 +165,7 @@ class SecondSegment extends StatelessWidget {
           desc.toUpperCase(),
           textAlign: TextAlign.center,
           style: GoogleFonts.montserrat(
-            fontSize: 13,
+            fontSize: iswide ? 13 : 12,
             fontWeight: FontWeight.w400,
             height: 1.5,
             color: Colors.black87,
@@ -203,133 +220,155 @@ class SecondSegment extends StatelessWidget {
   Widget buildDirectionsSection() {
     final textColor = const Color.fromRGBO(27, 60, 30, 1);
 
-    return Padding(
-      padding: const EdgeInsets.all(24),
-      child: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              "🌾 FROM THE CITY TO THE COUNTRY – A SCENIC ROUTE FROM KILDONAN PLACE 🚗🐄",
-              style: GoogleFonts.montserrat(
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-                color: textColor,
-              ),
+    return SingleChildScrollView(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            "🌾 FROM THE CITY TO THE COUNTRY – A SCENIC ROUTE FROM KILDONAN PLACE 🚗🐄",
+            style: GoogleFonts.montserrat(
+              fontWeight: FontWeight.bold,
+              fontSize: 16,
+              color: textColor,
             ),
-            const SizedBox(height: 24),
+          ),
+          const SizedBox(height: 24),
 
-            // 📍 Where are we going?
-            Text(
-              "📍 WHERE ARE WE GOING?",
-              style: GoogleFonts.montserrat(
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
-                color: textColor,
-              ),
+          // 📍 Where are we going?
+          Text(
+            "📍 WHERE ARE WE GOING?",
+            style: GoogleFonts.montserrat(
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
+              color: textColor,
             ),
-            const SizedBox(height: 8),
-            Text(
-              "53082 MUNICIPAL RD 41E, TACHÉ, MB R0A 0J0",
-              style: GoogleFonts.montserrat(fontSize: 14, color: textColor),
-            ),
-            const SizedBox(height: 24),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            "53082 MUNICIPAL RD 41E, TACHÉ, MB R0A 0J0",
+            style: GoogleFonts.montserrat(fontSize: 14, color: textColor),
+          ),
+          const SizedBox(height: 24),
 
-            // 🗺️ Need directions?
-            Text(
-              "🗺️ NEED DIRECTIONS?",
+          // 🗺️ Need directions?
+          Text(
+            "🗺️ NEED DIRECTIONS?",
+            style: GoogleFonts.montserrat(
+              fontWeight: FontWeight.bold,
+              fontSize: 14,
+              color: textColor,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            "JUST POP THIS INTO GOOGLE MAPS:",
+            style: GoogleFonts.montserrat(
+              fontWeight: FontWeight.w600,
+              fontSize: 14,
+              color: textColor,
+            ),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            "👉 53082 MUNICIPAL RD 41E, TACHÉ, MB",
+            style: GoogleFonts.montserrat(fontSize: 14, color: textColor),
+          ),
+          const SizedBox(height: 4),
+          GestureDetector(
+            onTap: () async {
+              final Uri url = Uri.parse(
+                'https://maps.google.com/?q=53082+Municipal+RD+41E,+Taché,+MB',
+              );
+              if (!await launchUrl(url)) {
+                throw Exception('Could not launch $url');
+              }
+            },
+            child: Text(
+              "OR CLICK THIS HANDY LINK: HERE",
               style: GoogleFonts.montserrat(
+                fontSize: 14,
+                color: Colors.green[900],
+                decoration: TextDecoration.underline,
                 fontWeight: FontWeight.bold,
-                fontSize: 14,
-                color: textColor,
               ),
             ),
-            const SizedBox(height: 8),
-            Text(
-              "JUST POP THIS INTO GOOGLE MAPS:",
-              style: GoogleFonts.montserrat(
-                fontWeight: FontWeight.w600,
-                fontSize: 14,
-                color: textColor,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              "👉 53082 MUNICIPAL RD 41E, TACHÉ, MB",
-              style: GoogleFonts.montserrat(fontSize: 14, color: textColor),
-            ),
-            const SizedBox(height: 4),
-            GestureDetector(
-              onTap: () async {
-                final Uri url = Uri.parse(
-                  'https://maps.google.com/?q=53082+Municipal+RD+41E,+Taché,+MB',
-                );
-                if (!await launchUrl(url)) {
-                  throw Exception('Could not launch $url');
-                }
-              },
-              child: Text(
-                "OR CLICK THIS HANDY LINK: HERE",
-                style: GoogleFonts.montserrat(
-                  fontSize: 14,
-                  color: Colors.green[900],
-                  decoration: TextDecoration.underline,
-                  fontWeight: FontWeight.bold,
+          ),
+          const SizedBox(height: 32),
+
+          // 🐄 Heads-Up
+          Text.rich(
+            textAlign: TextAlign.center,
+
+            TextSpan(
+              children: [
+                const TextSpan(text: "🐄 "),
+                TextSpan(
+                  text: "HEADS-UP: ",
+                  style: GoogleFonts.montserrat(
+                    fontWeight: FontWeight.bold,
+                    color: textColor,
+                  ),
                 ),
-              ),
+                TextSpan(
+                  text:
+                      "YOU'RE OFFICIALLY IN COW COUNTRY. EXPECT PEACEFUL ROADS, ENDLESS FIELDS, AND MAYBE A FEW MOOING SPECTATORS. "
+                      "RURAL HIGHWAYS MIGHT EVEN TOSS IN A GRAVEL ROAD FOR THAT AUTHENTIC ADVENTURE FEEL.",
+                  style: GoogleFonts.montserrat(color: textColor),
+                ),
+              ],
             ),
-            const SizedBox(height: 32),
+          ),
+          const SizedBox(height: 24),
 
-            // 🐄 Heads-Up
-            Text.rich(
-              textAlign: TextAlign.center,
-
-              TextSpan(
-                children: [
-                  const TextSpan(text: "🐄 "),
-                  TextSpan(
-                    text: "HEADS-UP: ",
-                    style: GoogleFonts.montserrat(
-                      fontWeight: FontWeight.bold,
-                      color: textColor,
-                    ),
+          // 🎈 Final line
+          Text.rich(
+            textAlign: TextAlign.center,
+            TextSpan(
+              children: [
+                const TextSpan(text: "🎈 "),
+                TextSpan(
+                  text:
+                      "BRING YOUR GOOD VIBES, YOUR APPETITE FOR FUN, AND MAYBE A PHONE CHARGER ",
+                  style: GoogleFonts.montserrat(
+                    fontWeight: FontWeight.bold,
+                    color: textColor,
                   ),
-                  TextSpan(
-                    text:
-                        "YOU'RE OFFICIALLY IN COW COUNTRY. EXPECT PEACEFUL ROADS, ENDLESS FIELDS, AND MAYBE A FEW MOOING SPECTATORS. "
-                        "RURAL HIGHWAYS MIGHT EVEN TOSS IN A GRAVEL ROAD FOR THAT AUTHENTIC ADVENTURE FEEL.",
-                    style: GoogleFonts.montserrat(color: textColor),
-                  ),
-                ],
-              ),
+                ),
+                TextSpan(
+                  text:
+                      "(BECAUSE NO ONE WANTS A DEAD BATTERY WHEN YOU’RE TRYING TO POST SUNSET PICS). WE CAN’T WAIT TO SEE YOU!",
+                  style: GoogleFonts.montserrat(color: textColor),
+                ),
+              ],
             ),
-            const SizedBox(height: 24),
+          ),
+        ],
+      ),
+    );
+  }
 
-            // 🎈 Final line
-            Text.rich(
-              textAlign: TextAlign.center,
-              TextSpan(
-                children: [
-                  const TextSpan(text: "🎈 "),
-                  TextSpan(
-                    text:
-                        "BRING YOUR GOOD VIBES, YOUR APPETITE FOR FUN, AND MAYBE A PHONE CHARGER ",
-                    style: GoogleFonts.montserrat(
-                      fontWeight: FontWeight.bold,
-                      color: textColor,
-                    ),
-                  ),
-                  TextSpan(
-                    text:
-                        "(BECAUSE NO ONE WANTS A DEAD BATTERY WHEN YOU’RE TRYING TO POST SUNSET PICS). WE CAN’T WAIT TO SEE YOU!",
-                    style: GoogleFonts.montserrat(color: textColor),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
+  Widget buildGifts() {
+    final textColor = const Color.fromRGBO(27, 60, 30, 1);
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          buildSection("🎁", "", textColor),
+          buildSection(
+            "The best present is your presence!",
+            "But if you’d like to bring a little something, a book with a personal message for Kaia’s library would be truly special—or a contribution to her future playground fund is always appreciated.",
+            textColor,
+          ),
+          buildSection(
+            "We’re also so happy to be welcoming Alyse, Jordan, Kaia and the fur babies back to Winnipeg this coming year!",
+            "As they start this exciting chapter—building a home and planning their wedding—your love and support mean the world. ",
+            textColor,
+          ),
+        ],
       ),
     );
   }
@@ -387,6 +426,7 @@ class SecondSegment extends StatelessWidget {
         children: [
           Text(
             title.toUpperCase(),
+            textAlign: TextAlign.center,
             style: GoogleFonts.montserrat(
               fontWeight: FontWeight.bold,
               fontSize: 16,
@@ -396,6 +436,8 @@ class SecondSegment extends StatelessWidget {
           const SizedBox(height: 8),
           Text(
             body,
+            textAlign: TextAlign.center,
+
             style: GoogleFonts.montserrat(
               fontSize: 14,
               color: textColor,

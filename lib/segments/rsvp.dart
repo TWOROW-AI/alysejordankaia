@@ -23,11 +23,13 @@ class _RsvpFormState extends State<RsvpForm> {
 
   @override
   Widget build(BuildContext context) {
-    final screenWidth = MediaQuery.sizeOf(context).width;
+    final screenWidth = MediaQuery.of(context).size.width;
 
-    final isMobile = screenWidth < 400;
-    final isTablet = screenWidth >= 400 && screenWidth <= 800;
+    // Define breakpoints for responsiveness
+    final isMobile = screenWidth < 600;
+    final isTablet = screenWidth >= 600 && screenWidth <= 1024;
 
+    // Dynamic sizing based on screen width
     final labelFontSize =
         isMobile
             ? 12.0
@@ -36,13 +38,13 @@ class _RsvpFormState extends State<RsvpForm> {
             : 14.0;
     final radioLabelFontSize =
         isMobile
-            ? 10.0
+            ? 8.0
             : isTablet
             ? 11.0
             : 12.0;
     final radioTitleFontSize =
         isMobile
-            ? 12.0
+            ? 8.0
             : isTablet
             ? 13.0
             : 14.0;
@@ -61,16 +63,16 @@ class _RsvpFormState extends State<RsvpForm> {
             : 24.0;
     final svgSpacing =
         isMobile
-            ? 16.0
+            ? 12.0
             : isTablet
             ? 20.0
             : 24.0;
 
     final buttonHorizontalPadding =
         isMobile
-            ? 32.0
+            ? 24.0
             : isTablet
-            ? 40.0
+            ? 32.0
             : 48.0;
     final buttonVerticalPadding =
         isMobile
@@ -95,121 +97,54 @@ class _RsvpFormState extends State<RsvpForm> {
         isMobile
             ? 40.0
             : isTablet
-            ? 50.0
+            ? 40.0
             : 60.0;
     final radioCircleSize =
         isMobile
-            ? 40.0
+            ? 20.0
             : isTablet
             ? 44.0
             : 48.0;
 
-    return Column(
-      children: [
-        (isMobile || (isTablet && screenWidth < 600))
-            ? Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SingleChildScrollView(
-                  child: Form(
-                    key: _formKey,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        buildLabel("NAME", labelFontSize),
-                        buildTextField(
-                          (val) => firstName = val ?? '',
-                          padding: formPadding,
-                        ),
-                        buildLabel("email", labelFontSize),
-                        buildTextField(
-                          (val) => email = val ?? '',
-                          padding: formPadding,
-                        ),
-                        buildLabel("MOBILE NUMBER", labelFontSize),
-                        buildTextField(
-                          (val) => mobile = val ?? '',
-                          keyboardType: TextInputType.phone,
-                          padding: formPadding,
-                        ),
-                        SizedBox(height: verticalSpacing),
-                        Text(
-                          "WILL YOU BE ATTENDING BOTH OR DROPPING BY FOR A PORTION?",
-                          style: GoogleFonts.montserrat(
-                            fontSize: radioTitleFontSize,
-                            fontWeight: FontWeight.bold,
-                            color: textColor,
-                          ),
-                        ),
-                        SizedBox(height: verticalSpacing),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            buildRadioOption(
-                              "Baby Kais\nDebut",
-                              radioLabelFontSize,
-                              radioCircleSize,
-                            ),
-                            buildRadioOption(
-                              "Alyse + Jordan’s\nEngagement Party",
-                              radioLabelFontSize,
-                              radioCircleSize,
-                            ),
-                            buildRadioOption(
-                              "Both",
-                              radioLabelFontSize,
-                              radioCircleSize,
-                            ),
-                          ],
-                        ),
-                        SizedBox(height: largeVerticalSpacing),
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(height: verticalSpacing),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SvgPicture.asset(
-                      "assets/x.svg",
-                      height: svgSize,
-                      width: svgSize,
-                    ),
-                    SizedBox(width: svgSpacing),
-                    SvgPicture.asset(
-                      "assets/y.svg",
-                      height: svgSize,
-                      width: svgSize,
-                    ),
-                  ],
-                ),
-              ],
-            )
-            : Row(
+    // Dynamic form width to prevent overflow
+    final formWidth = screenWidth > 900 ? 900.0 : screenWidth * 0.9;
+
+    return SingleChildScrollView(
+      padding: EdgeInsets.all(isMobile ? 16.0 : 24.0), // Responsive padding
+      child: ConstrainedBox(
+        constraints: BoxConstraints(maxWidth: formWidth),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            Flex(
+              direction: isMobile ? Axis.vertical : Axis.horizontal,
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Expanded(
-                  flex: 2,
-                  child: SingleChildScrollView(
-                    child: Form(
-                      key: _formKey,
+                  flex: isMobile ? 0 : 2,
+                  child: Form(
+                    key: _formKey,
+                    child: SizedBox(
+                      width:
+                          isMobile
+                              ? formWidth
+                              : null, // Constrain form width on mobile
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          buildLabel("NAME", labelFontSize),
+                          buildLabel("Name", labelFontSize),
                           buildTextField(
                             (val) => firstName = val ?? '',
                             padding: formPadding,
                           ),
-                          buildLabel("email", labelFontSize),
+                          buildLabel("Email", labelFontSize),
                           buildTextField(
                             (val) => email = val ?? '',
                             padding: formPadding,
                           ),
-                          buildLabel("MOBILE NUMBER", labelFontSize),
+                          buildLabel("Mobile Number", labelFontSize),
                           buildTextField(
                             (val) => mobile = val ?? '',
                             keyboardType: TextInputType.phone,
@@ -217,7 +152,7 @@ class _RsvpFormState extends State<RsvpForm> {
                           ),
                           SizedBox(height: verticalSpacing),
                           Text(
-                            "WILL YOU BE ATTENDING BOTH OR DROPPING BY FOR A PORTION?",
+                            "Will you be attending both or dropping by for a portion?",
                             style: GoogleFonts.montserrat(
                               fontSize: radioTitleFontSize,
                               fontWeight: FontWeight.bold,
@@ -225,8 +160,13 @@ class _RsvpFormState extends State<RsvpForm> {
                             ),
                           ),
                           SizedBox(height: verticalSpacing),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          Wrap(
+                            spacing:
+                                isMobile
+                                    ? 4.0
+                                    : 8.0, // Adjusted spacing for mobile
+                            runSpacing: 12.0,
+                            alignment: WrapAlignment.center,
                             children: [
                               buildRadioOption(
                                 "Baby Kais\nDebut",
@@ -234,7 +174,7 @@ class _RsvpFormState extends State<RsvpForm> {
                                 radioCircleSize,
                               ),
                               buildRadioOption(
-                                "Alyse + Jordan’s\nEngagement Party",
+                                "Alyse + Jordan’s\nEngagement",
                                 radioLabelFontSize,
                                 radioCircleSize,
                               ),
@@ -251,82 +191,84 @@ class _RsvpFormState extends State<RsvpForm> {
                     ),
                   ),
                 ),
-                SizedBox(width: svgSpacing),
-                Expanded(
-                  flex: 1,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset("assets/x.svg"),
-                      SizedBox(width: svgSpacing),
-                      SvgPicture.asset("assets/y.svg"),
-                    ],
+                if (!isMobile) SizedBox(width: svgSpacing),
+                if (!isMobile)
+                  Expanded(
+                    flex: 1,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset(
+                          "assets/x.svg",
+                          width: svgSize,
+                          height: svgSize + 200,
+                        ),
+                        SizedBox(width: svgSpacing),
+                        SvgPicture.asset(
+                          "assets/y.svg",
+                          width: svgSize,
+                          height: svgSize + 50,
+                        ),
+                      ],
+                    ),
                   ),
-                ),
               ],
             ),
-        SizedBox(height: svgSpacing),
-        Center(
-          child: ElevatedButton(
-            style: ElevatedButton.styleFrom(
-              backgroundColor: textColor,
-              padding: EdgeInsets.symmetric(
-                horizontal: buttonHorizontalPadding,
-                vertical: buttonVerticalPadding,
-              ),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(50),
-              ),
-            ),
-            onPressed: () async {
-              if (_formKey.currentState?.validate() ?? false) {
-                _formKey.currentState?.save();
-
-                if (selectedOption == null || selectedOption!.trim().isEmpty) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Please select an option.')),
-                  );
-                  return;
-                }
-
-                final data = {
-                  "name": firstName.trim(),
-                  "phone": mobile.trim(),
-                  "email": email.trim(),
-                  "option": selectedOption?.replaceAll('\n', ' ').trim(),
-                  "timestamp": FieldValue.serverTimestamp(),
-                };
-
-                try {
-                  await FirebaseFirestore.instance
-                      .collection('rsvps')
-                      .add(data);
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('RSVP submitted successfully!'),
+            if (isMobile) SizedBox(),
+            // Padding(
+            //   padding: EdgeInsets.only(bottom: verticalSpacing),
+            //   child: Row(
+            //     mainAxisAlignment: MainAxisAlignment.center,
+            //     children: [
+            //       SvgPicture.asset(
+            //         "assets/x.svg",
+            //         width: svgSize,
+            //         height: svgSize,
+            //       ),
+            //       SizedBox(width: svgSpacing),
+            //       SvgPicture.asset(
+            //         "assets/y.svg",
+            //         width: svgSize,
+            //         height: svgSize,
+            //       ),
+            //     ],
+            //   ),
+            // ),
+            Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: SizedBox(
+                width:
+                    isMobile
+                        ? formWidth * 0.6
+                        : formWidth * 0.4, // Responsive button width
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: textColor,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: buttonHorizontalPadding,
+                      vertical: buttonVerticalPadding,
                     ),
-                  );
-                  Navigator.of(context).pop();
-                } catch (e) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Error submitting RSVP}')),
-                  );
-                }
-              }
-            },
-            child: Text(
-              "RSVP",
-              style: GoogleFonts.montserrat(
-                color: Colors.white,
-                fontSize: buttonFontSize,
-                fontWeight: FontWeight.bold,
-                letterSpacing: 1.2,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(50),
+                    ),
+                  ),
+                  onPressed: submitForm,
+                  child: Text(
+                    "RSVP",
+                    style: GoogleFonts.montserrat(
+                      color: Colors.white,
+                      fontSize: buttonFontSize,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1.2,
+                    ),
+                  ),
+                ),
               ),
             ),
-          ),
+          ],
         ),
-      ],
+      ),
     );
   }
 
@@ -370,9 +312,32 @@ class _RsvpFormState extends State<RsvpForm> {
 
   Widget buildRadioOption(String label, double fontSize, double circleSize) {
     final isSelected = selectedOption == label;
+
+    final screenWidth = MediaQuery.of(context).size.width;
+    final isMobile = screenWidth < 600;
+    final isTablet = screenWidth >= 600 && screenWidth <= 1024;
+
+    final textWidth =
+        isMobile
+            ? screenWidth * 0.25
+            : isTablet
+            ? screenWidth * 0.15
+            : 120.0;
+
+    // Adjust spacing between circle and text dynamically
+    final spacing =
+        isMobile
+            ? 6.0
+            : isTablet
+            ? 8.0
+            : 10.0;
+
     return GestureDetector(
       onTap: () => setState(() => selectedOption = label),
       child: Column(
+        // mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Container(
             width: circleSize,
@@ -383,18 +348,57 @@ class _RsvpFormState extends State<RsvpForm> {
               border: Border.all(color: textColor, width: 2),
             ),
           ),
-          const SizedBox(height: 8),
-          Text(
-            label.toUpperCase(),
-            textAlign: TextAlign.center,
-            style: GoogleFonts.montserrat(
-              fontWeight: FontWeight.bold,
-              fontSize: fontSize,
-              color: textColor,
+          SizedBox(height: spacing), // Dynamic spacing
+          ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: textWidth, // Dynamic max width for text
+              minWidth: 80.0, // Ensure a minimum width for readability
+            ),
+            child: Text(
+              label.toUpperCase(),
+              textAlign: TextAlign.center,
+              style: GoogleFonts.montserrat(
+                fontWeight: FontWeight.bold,
+                fontSize: fontSize,
+                color: textColor,
+              ),
             ),
           ),
         ],
       ),
     );
+  }
+
+  Future<void> submitForm() async {
+    if (_formKey.currentState?.validate() ?? false) {
+      _formKey.currentState?.save();
+
+      if (selectedOption == null || selectedOption!.trim().isEmpty) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Please select an option.')),
+        );
+        return;
+      }
+
+      final data = {
+        "name": firstName.trim(),
+        "phone": mobile.trim(),
+        "email": email.trim(),
+        "option": selectedOption?.replaceAll('\n', ' ').trim(),
+        "timestamp": FieldValue.serverTimestamp(),
+      };
+
+      try {
+        await FirebaseFirestore.instance.collection('rsvps').add(data);
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('RSVP submitted successfully!')),
+        );
+        Navigator.of(context).pop();
+      } catch (e) {
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error submitting RSVP: $e')));
+      }
+    }
   }
 }
